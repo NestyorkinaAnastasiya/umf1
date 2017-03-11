@@ -1,21 +1,23 @@
 /*slae.h*/
 #pragma once
-#include "tests.h"
+#include "matrix.h"
 using namespace matrix;
-using namespace tests;
 
 namespace slae{
 	class SLAE {
+		//Номер зашитого теста
+		int test;
 		//Размерность задачи
 		int n;
 		//Максимальное количество итераций
 		const int maxiter = 10000;
 		//Точность решения СЛАУ
 		const double eps = 1e-14;
+		//Коэфициенты задачи 
 		double lambda;
 		double gamma;
 		//Сетка, элементы которой узлы
-		Nodes grid;
+		Grid grid;
 		//Глобальная матрица
 		Matrix A;
 		//Локальный вектор правой части
@@ -29,6 +31,7 @@ namespace slae{
 
 		//Нахождение правой части
 		double CalculateF(double x, double y);
+		double CalculateGamma(double x, double y);
 		//Нахождение правой части при первом краевом условии
 		double CalculateF1(double x, double y);
 		//Нахождение правой части при втором краевом условии
@@ -46,9 +49,16 @@ namespace slae{
 		//Скалярное произведение векторов
 		double Scalar(const vector<double>& x, const vector<double>& y);
 
+
+		double Residual();
+		void IterativeSteps(vector<double>& _new, vector<double> old);
+		double Sum(int i, vector<double> _new, vector<double> old);
 		
 	public:
+		//параметр релаксации
+		double w = 1;
 		SLAE();
+		void GaussSeidel();
 		~SLAE() {};
 	};
 }

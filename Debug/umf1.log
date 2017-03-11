@@ -1,0 +1,4 @@
+﻿  slae.cpp
+d:\umf1\umf1\slae.cpp(7): warning C4018: <: несоответствие типов со знаком и без знака
+  umf1.vcxproj -> D:\umf1\Debug\umf1.exe
+  umf1.vcxproj -> D:\umf1\Debug\umf1.pdb (Partial PDB)

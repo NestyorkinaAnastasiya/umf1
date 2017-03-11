@@ -21,9 +21,6 @@ namespace grid{
 		//3 - 3 рода
 		//-1 - нет краевых условий
 		array<int, 6> ku;
-		//Cпособ расчёта краевых условий
-		//-1 - нет краевых условий
-		array<int, 6> kuForm;
 		Area();
 	};
 
@@ -48,7 +45,7 @@ namespace grid{
 	};
 
 	//Разбиение общей области
-	class Nodes{
+	class Grid{
 		//Генерация координаты с учётом разбиения на всех интервалах
 		void PartitionСoordinate(vector <double> &x, array <double, 3> areasLines,
 			array <double, 2> coefficient, array <int, 2> nIntervals);
@@ -56,7 +53,7 @@ namespace grid{
 		void PushNode(double x, double y);	
 		
 	public:
-		Nodes();
+		Grid();
 		//Область Г
 		Area area;
 		//Массив узлов
@@ -65,15 +62,17 @@ namespace grid{
 		//после построения сетки
 		int nx, ny;
 
-		//Определение фиктивности узла через расчётные области
+		//Проверка на фиктивность узла
 		bool FictNode(double x, double y);
+		//Проверка узла на принадлежность к заданной области 
 		bool InNode(double x, double y);
+		//Проверка на принадлежность узла одной из границ
 		int BorderNode(double x, double y);
 
 		//Построение сетки
 		void BuildNodes();
 
-		~Nodes();
+		~Grid();
 	};
 
 }

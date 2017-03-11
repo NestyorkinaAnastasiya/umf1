@@ -15,18 +15,15 @@ namespace grid{
 		for (int i = 0; i < 6; i++)
 			fscanf_s(fo, "%lf", &ku[i]);
 
-		for (int i = 0; i < 6; i++)
-			fscanf_s(fo, "%lf", &kuForm[i]);
-
 		fclose(fo);
 	}
 
-	Nodes::Nodes(){}
+	Grid::Grid(){}
 
-	Nodes::~Nodes() {}
+	Grid::~Grid() {}
 
 	//Генерация координаты с учётом разбиения на всех интервалах
-	void Nodes::PartitionСoordinate(vector <double> &x, array <double, 3> areasLines,
+	void Grid::PartitionСoordinate(vector <double> &x, array <double, 3> areasLines,
 		array <double, 2> coefficient, array <int, 2> nIntervals){
 		int count;
 		//длина интервала
@@ -65,7 +62,7 @@ namespace grid{
 	}
 
 	//Добавление узла
-	void Nodes::PushNode(double x, double y){
+	void Grid::PushNode(double x, double y){
 		Point p;
 		p.y = y;
 		p.x = x;
@@ -74,7 +71,7 @@ namespace grid{
 	}
 
 	//Построение сетки
-	void Nodes::BuildNodes(){
+	void Grid::BuildNodes(){
 		//для iого интервала и каждой координаты
 		//коэффициент разрядки
 		array <double, 2> xCoefficient;
@@ -147,18 +144,21 @@ namespace grid{
 					PushNode(xi[i], yj[j]);
 	}
 
-	bool Nodes::FictNode(double x, double y){
+	//Проверка на фиктивность узла
+	bool Grid::FictNode(double x, double y){
 		if (x > area.x[1] && y < area.y[1]) return true;
 		return false;
 	}
 
-	bool Nodes::InNode(double x, double y){
+	//Проверка узла на принадлежность к заданной области 
+	bool Grid::InNode(double x, double y){
 		if (x > area.x[0] && x < area.x[1] && y > area.y[0] && y < area.y[1]) return true;
 		if (x > area.x[0] && x < area.x[2] && y > area.y[1] && y < area.y[2]) return true;
 		return false;
 	}
 
-	int Nodes::BorderNode(double x, double y){
+	//Проверка на принадлежность узла одной из границ
+	int Grid::BorderNode(double x, double y){
 		if (x == area.x[0] && y >= area.y[0] && y <= area.y[2]) return 0;
 		if (x == area.x[1] && y >= area.y[0] && y <= area.y[1]) return 1;
 		if (x == area.x[2] && y >= area.y[1] && y <= area.y[2]) return 2;
