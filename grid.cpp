@@ -2,7 +2,8 @@
 #include "grid.h"
 
 namespace grid{
-	Area::Area(){
+	Area::Area()
+	{
 		FILE *fo;
 		fopen_s(&fo, "Area.txt", "r");
 
@@ -13,7 +14,7 @@ namespace grid{
 			fscanf_s(fo, "%lf", &y[i]);
 
 		for (int i = 0; i < 6; i++)
-			fscanf_s(fo, "%lf", &ku[i]);
+			fscanf_s(fo, "%d", &ku[i]);
 
 		fclose(fo);
 	}
@@ -22,35 +23,37 @@ namespace grid{
 
 	Grid::~Grid() {}
 
-	//Генерация координаты с учётом разбиения на всех интервалах
-	void Grid::PartitionСoordinate(vector <double> &x, array <double, 3> areasLines,
-		array <double, 2> coefficient, array <int, 2> nIntervals){
+	//Р“РµРЅРµСЂР°С†РёСЏ РєРѕРѕСЂРґРёРЅР°С‚С‹ СЃ СѓС‡С‘С‚РѕРј СЂР°Р·Р±РёРµРЅРёСЏ РЅР° РІСЃРµС… РёРЅС‚РµСЂРІР°Р»Р°С…
+	void Grid::PartitionРЎoordinate(vector <double> &x, array <double, 3> areasLines,
+		array <double, 2> coefficient, array <int, 2> nIntervals)
+	{
 		int count;
-		//длина интервала
+		//РґР»РёРЅР° РёРЅС‚РµСЂРІР°Р»Р°
 		double l;
-		//шаг
+		//С€Р°Рі
 		double h;
-		//число интервалов
+		//С‡РёСЃР»Рѕ РёРЅС‚РµСЂРІР°Р»РѕРІ
 		int nLines = areasLines.size();
 
 		count = 0;
-		for (int i = 0; i < nLines - 1; i++){
+		for (int i = 0; i < nLines - 1; i++)
+		{
 			x.push_back(areasLines[i]);
 			count++;
 
-			//длина интервала
+			//РґР»РёРЅР° РёРЅС‚РµСЂРІР°Р»Р°
 			l = abs(areasLines[i + 1] - areasLines[i]);
 
-			//рассчитываем первый шаг
-			//равномерная
+			//СЂР°СЃСЃС‡РёС‚С‹РІР°РµРј РїРµСЂРІС‹Р№ С€Р°Рі
+			//СЂР°РІРЅРѕРјРµСЂРЅР°СЏ
 			if (abs(1.0 - coefficient[i]) < 1E-14)
 				h = l / nIntervals[i];
-			else {//неравномерная
+			else {//РЅРµСЂР°РІРЅРѕРјРµСЂРЅР°СЏ
 					h = l * (1.0 - coefficient[i]);
 					h /= 1.0 - pow(coefficient[i], nIntervals[i]);
 				}
 
-			//получаем сетку внутри интервала
+			//РїРѕР»СѓС‡Р°РµРј СЃРµС‚РєСѓ РІРЅСѓС‚СЂРё РёРЅС‚РµСЂРІР°Р»Р°
 			for (int j = 1; j < nIntervals[i]; j++)
 			{
 				if (j != 1) h *= coefficient[i];
@@ -61,44 +64,46 @@ namespace grid{
 		x.push_back(areasLines[nLines - 1]);
 	}
 
-	//Добавление узла
-	void Grid::PushNode(double x, double y){
+	//Р”РѕР±Р°РІР»РµРЅРёРµ СѓР·Р»Р°
+	void Grid::PushNode(double x, double y)
+	{
 		Point p;
 		p.y = y;
 		p.x = x;
-		//кладём узел в конец массива узлов
+		//РєР»Р°РґС‘Рј СѓР·РµР» РІ РєРѕРЅРµС† РјР°СЃСЃРёРІР° СѓР·Р»РѕРІ
 		nodes.push_back(p);
 	}
 
-	//Построение сетки
-	void Grid::BuildNodes(){
-		//для iого интервала и каждой координаты
-		//коэффициент разрядки
+	//РџРѕСЃС‚СЂРѕРµРЅРёРµ СЃРµС‚РєРё
+	void Grid::BuildNodes()
+	{
+		//РґР»СЏ iРѕРіРѕ РёРЅС‚РµСЂРІР°Р»Р° Рё РєР°Р¶РґРѕР№ РєРѕРѕСЂРґРёРЅР°С‚С‹
+		//РєРѕСЌС„С„РёС†РёРµРЅС‚ СЂР°Р·СЂСЏРґРєРё
 		array <double, 2> xCoefficient;
 		array <double, 2> yCoefficient;
-		//число подинтервалов
+		//С‡РёСЃР»Рѕ РїРѕРґРёРЅС‚РµСЂРІР°Р»РѕРІ
 		array <int, 2>  xIntervals;
 		array <int, 2>  yIntervals;
 
-		//количество координатных линий по x и y
+		//РєРѕР»РёС‡РµСЃС‚РІРѕ РєРѕРѕСЂРґРёРЅР°С‚РЅС‹С… Р»РёРЅРёР№ РїРѕ x Рё y
 		int xLines = 3;
 		int yLines = 3;
 
-		//геометрические линии разбиения по х и y
+		//РіРµРѕРјРµС‚СЂРёС‡РµСЃРєРёРµ Р»РёРЅРёРё СЂР°Р·Р±РёРµРЅРёСЏ РїРѕ С… Рё y
 		vector <double> xi;
 		vector <double> yj;
 
-		//временная переменная для считывания
+		//РІСЂРµРјРµРЅРЅР°СЏ РїРµСЂРµРјРµРЅРЅР°СЏ РґР»СЏ СЃС‡РёС‚С‹РІР°РЅРёСЏ
 		int tmp1;
-		//временная переменная для считывания
+		//РІСЂРµРјРµРЅРЅР°СЏ РїРµСЂРµРјРµРЅРЅР°СЏ РґР»СЏ СЃС‡РёС‚С‹РІР°РЅРёСЏ
 		double tmp2;
 
-		//число узлов
+		//С‡РёСЃР»Рѕ СѓР·Р»РѕРІ
 		int nNodes;
 
 		FILE *fo;
 		fopen_s(&fo,"Intervals.txt", "r");
-		//ввод количества интервалов по х и у и коэффициентов разрядки
+		//РІРІРѕРґ РєРѕР»РёС‡РµСЃС‚РІР° РёРЅС‚РµСЂРІР°Р»РѕРІ РїРѕ С… Рё Сѓ Рё РєРѕСЌС„С„РёС†РёРµРЅС‚РѕРІ СЂР°Р·СЂСЏРґРєРё
 		for (int i = 0; i < xLines - 1; i++)
 		{
 			fscanf_s(fo, "%d", &tmp1);
@@ -118,47 +123,50 @@ namespace grid{
 
 		nx = 0;
 		for (int i = 0; i < xLines - 1; i++)
-			//общее количество интервалов по х
+			//РѕР±С‰РµРµ РєРѕР»РёС‡РµСЃС‚РІРѕ РёРЅС‚РµСЂРІР°Р»РѕРІ РїРѕ С…
 			nx += xIntervals[i];
 		nx++;
 
 		ny = 0;
 		for (int j = 0; j < yLines - 1; j++)
-			//общее количество интервалов по у
+			//РѕР±С‰РµРµ РєРѕР»РёС‡РµСЃС‚РІРѕ РёРЅС‚РµСЂРІР°Р»РѕРІ РїРѕ Сѓ
 			ny += yIntervals[j];
 		ny++;
 
 		xi.reserve(nx); yj.reserve(ny);
 
-		//построение сеток по х и у
-		PartitionСoordinate(xi, area.x, xCoefficient, xIntervals);
-		PartitionСoordinate(yj, area.y, yCoefficient, yIntervals);
+		//РїРѕСЃС‚СЂРѕРµРЅРёРµ СЃРµС‚РѕРє РїРѕ С… Рё Сѓ
+		PartitionРЎoordinate(xi, area.x, xCoefficient, xIntervals);
+		PartitionРЎoordinate(yj, area.y, yCoefficient, yIntervals);
 
 		nNodes = xi.size() * yj.size();
 
 		nodes.reserve(nNodes);
 
-		//заполняем список узлов
+		//Р·Р°РїРѕР»РЅСЏРµРј СЃРїРёСЃРѕРє СѓР·Р»РѕРІ
 		for (int j = 0; j < yj.size(); j++)
 			for (int i = 0; i < xi.size(); i++)
 					PushNode(xi[i], yj[j]);
 	}
 
-	//Проверка на фиктивность узла
-	bool Grid::FictNode(double x, double y){
+	//РџСЂРѕРІРµСЂРєР° РЅР° С„РёРєС‚РёРІРЅРѕСЃС‚СЊ СѓР·Р»Р°
+	bool Grid::FictNode(double x, double y)
+	{
 		if (x > area.x[1] && y < area.y[1]) return true;
 		return false;
 	}
 
-	//Проверка узла на принадлежность к заданной области 
-	bool Grid::InNode(double x, double y){
-		if (x > area.x[0] && x < area.x[1] && y > area.y[0] && y < area.y[1]) return true;
+	//РџСЂРѕРІРµСЂРєР° СѓР·Р»Р° РЅР° РїСЂРёРЅР°РґР»РµР¶РЅРѕСЃС‚СЊ Рє Р·Р°РґР°РЅРЅРѕР№ РѕР±Р»Р°СЃС‚Рё 
+	bool Grid::InNode(double x, double y)
+	{
+		if (x > area.x[0] && x < area.x[1] && y > area.y[0] && y < area.y[2]) return true;
 		if (x > area.x[0] && x < area.x[2] && y > area.y[1] && y < area.y[2]) return true;
 		return false;
 	}
 
-	//Проверка на принадлежность узла одной из границ
-	int Grid::BorderNode(double x, double y){
+	//РџСЂРѕРІРµСЂРєР° РЅР° РїСЂРёРЅР°РґР»РµР¶РЅРѕСЃС‚СЊ СѓР·Р»Р° РѕРґРЅРѕР№ РёР· РіСЂР°РЅРёС†
+	int Grid::BorderNode(double x, double y)
+	{
 		if (x == area.x[0] && y >= area.y[0] && y <= area.y[2]) return 0;
 		if (x == area.x[1] && y >= area.y[0] && y <= area.y[1]) return 1;
 		if (x == area.x[2] && y >= area.y[1] && y <= area.y[2]) return 2;
