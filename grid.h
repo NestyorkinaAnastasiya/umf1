@@ -7,35 +7,40 @@
 #include <array>
 using namespace std;
 
-namespace grid{
-	//Нумерация идёт следующим образом: 
-	//слева направо, снизу вверх
+namespace grid
+{
+	//РќСѓРјРµСЂР°С†РёСЏ РёРґС‘С‚ СЃР»РµРґСѓСЋС‰РёРј РѕР±СЂР°Р·РѕРј: 
+	//СЃР»РµРІР° РЅР°РїСЂР°РІРѕ, СЃРЅРёР·Сѓ РІРІРµСЂС…
 
-	//Область
-	struct Area{
+	//РћР±Р»Р°СЃС‚СЊ
+	struct Area
+	{
 		array <double, 3> x;
 		array <double, 3> y;
 
-		//1 - 1 рода
-		//2 - 2 рода
-		//3 - 3 рода
-		//-1 - нет краевых условий
+		//1 - 1 СЂРѕРґР°
+		//2 - 2 СЂРѕРґР°
+		//3 - 3 СЂРѕРґР°
+		//-1 - РЅРµС‚ РєСЂР°РµРІС‹С… СѓСЃР»РѕРІРёР№
 		array<int, 6> ku;
 		Area();
 	};
 
-	struct Point{
+	struct Point
+	{
 		double x;
 		double y;
 
 		Point() {};
 		~Point() {};
-		Point(double xx, double yy){
+		Point(double xx, double yy)
+		{
 			x = xx;
 			y = yy;
 		}
 
-		bool operator==(Point point){
+		bool operator==(Point point)
+		{
 			if (point.x == x && point.y == y)
 				return true;
 			else
@@ -44,32 +49,33 @@ namespace grid{
 
 	};
 
-	//Разбиение общей области
-	class Grid{
-		//Генерация координаты с учётом разбиения на всех интервалах
-		void PartitionСoordinate(vector <double> &x, array <double, 3> areasLines,
+	//Р Р°Р·Р±РёРµРЅРёРµ РѕР±С‰РµР№ РѕР±Р»Р°СЃС‚Рё
+	class Grid
+	{
+		//Р“РµРЅРµСЂР°С†РёСЏ РєРѕРѕСЂРґРёРЅР°С‚С‹ СЃ СѓС‡С‘С‚РѕРј СЂР°Р·Р±РёРµРЅРёСЏ РЅР° РІСЃРµС… РёРЅС‚РµСЂРІР°Р»Р°С…
+		void PartitionРЎoordinate(vector <double> &x, array <double, 3> areasLines,
 			array <double, 2> coefficient, array <int, 2> nIntervals);
-		//Добавление узла
+		//Р”РѕР±Р°РІР»РµРЅРёРµ СѓР·Р»Р°
 		void PushNode(double x, double y);	
 		
 	public:
 		Grid();
-		//Область Г
+		//РћР±Р»Р°СЃС‚СЊ Р“
 		Area area;
-		//Массив узлов
+		//РњР°СЃСЃРёРІ СѓР·Р»РѕРІ
 		vector <Point> nodes;
-		//Общее количество интервалов по x и по y
-		//после построения сетки
+		//РћР±С‰РµРµ РєРѕР»РёС‡РµСЃС‚РІРѕ РёРЅС‚РµСЂРІР°Р»РѕРІ РїРѕ x Рё РїРѕ y
+		//РїРѕСЃР»Рµ РїРѕСЃС‚СЂРѕРµРЅРёСЏ СЃРµС‚РєРё
 		int nx, ny;
 
-		//Проверка на фиктивность узла
+		//РџСЂРѕРІРµСЂРєР° РЅР° С„РёРєС‚РёРІРЅРѕСЃС‚СЊ СѓР·Р»Р°
 		bool FictNode(double x, double y);
-		//Проверка узла на принадлежность к заданной области 
+		//РџСЂРѕРІРµСЂРєР° СѓР·Р»Р° РЅР° РїСЂРёРЅР°РґР»РµР¶РЅРѕСЃС‚СЊ Рє Р·Р°РґР°РЅРЅРѕР№ РѕР±Р»Р°СЃС‚Рё 
 		bool InNode(double x, double y);
-		//Проверка на принадлежность узла одной из границ
+		//РџСЂРѕРІРµСЂРєР° РЅР° РїСЂРёРЅР°РґР»РµР¶РЅРѕСЃС‚СЊ СѓР·Р»Р° РѕРґРЅРѕР№ РёР· РіСЂР°РЅРёС†
 		int BorderNode(double x, double y);
 
-		//Построение сетки
+		//РџРѕСЃС‚СЂРѕРµРЅРёРµ СЃРµС‚РєРё
 		void BuildNodes();
 
 		~Grid();
