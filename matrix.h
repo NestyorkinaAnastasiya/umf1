@@ -3,20 +3,22 @@
 #include <algorithm>
 #include "grid.h"
 using namespace grid;
-namespace matrix{
-	struct Matrix{
-		//Матрица СЛАУ
-		//5-тидиагональная матрица 
+namespace matrix
+{
+	struct Matrix
+	{
+		//РњР°С‚СЂРёС†Р° РЎР›РђРЈ
+		//5-С‚РёРґРёР°РіРѕРЅР°Р»СЊРЅР°СЏ РјР°С‚СЂРёС†Р° 
 		array<vector<double>, 5> matr;
-		//сдвиги диагоналей
+		//СЃРґРІРёРіРё РґРёР°РіРѕРЅР°Р»РµР№
 		array<int, 5> ia;
-		//размерность матрицы
+		//СЂР°Р·РјРµСЂРЅРѕСЃС‚СЊ РјР°С‚СЂРёС†С‹
 		int n;
-		//количество нулевых диагоналей
+		//РєРѕР»РёС‡РµСЃС‚РІРѕ РЅСѓР»РµРІС‹С… РґРёР°РіРѕРЅР°Р»РµР№
 		int m;
 
 		void Initialization(int size, int k);
-		//Умножение матрицы на вектор
-		void MultiplyAx(const vector <double> &a, vector<double>& result);
+		//РЈРјРЅРѕР¶РµРЅРёРµ РјР°С‚СЂРёС†С‹ РЅР° РІРµРєС‚РѕСЂ
+		void MultiplyAx(const vector <double> a, vector<double>& result);
 	};
 }
