@@ -1,33 +1,41 @@
 /*matrix.cpp*/
 #include "matrix.h"
 
-namespace matrix{
-	void Matrix::Initialization(int size, int k){
+namespace matrix
+{
+	void Matrix::Initialization(int size, int k)
+	{
 		int i, j, s, l, f;
 
 		n = size;
-		m = k;
-		for (i = 0, f = 0, l = -m - 4; i < 5; i++, l++, f++){
+		m = k-2;
+		for (i = 0, f = 0, l = -m-2; i < 5; i++, l++, f++)
+		{
 			ia[i] += l;
-			// êîëè÷åñòâî ýëåìåíòîâ â i-îé äèàãîíàëè
+			// ÐºÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾ ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚Ð¾Ð² Ð² i-Ð¾Ð¹ Ð´Ð¸Ð°Ð³Ð¾Ð½Ð°Ð»Ð¸
 			s = n - abs(l);
 			matr[i].resize(s);
-			//åñëè ïðîøëè 3 äèàãîíàëè, ñìåùàåì èíäåêñû íà m
+			//ÐµÑÐ»Ð¸ Ð¿Ñ€Ð¾ÑˆÐ»Ð¸ 3 Ð´Ð¸Ð°Ð³Ð¾Ð½Ð°Ð»Ð¸, ÑÐ¼ÐµÑ‰Ð°ÐµÐ¼ Ð¸Ð½Ð´ÐµÐºÑÑ‹ Ð½Ð° m
 			if (f == 0 || f == 3) l += m;
 		}
 	}
 
-	void Matrix::MultiplyAx(const vector <double> &a, vector <double> &result){
+	void Matrix::MultiplyAx(const vector <double> a, vector <double> &result)
+	{
 		int  j, k, l;
-		for (int i = 0; i < 5; i++){
+		for (int i = 0; i < result.size(); i++)
+			result[i] = 0;
+		for (int i = 0; i < 5; i++)
+		{
 			k = ia[i];
-			//íèæíèé òðåóãîëüíèê
-			if (k < 0){
+			//Ð½Ð¸Ð¶Ð½Ð¸Ð¹ Ñ‚Ñ€ÐµÑƒÐ³Ð¾Ð»ÑŒÐ½Ð¸Ðº
+			if (k < 0)
+			{
 				k = abs(k);
 				for (j = k, l = 0; j < n; j++, l++)
 					result[j] += matr[i][l] * a[l];
 			}
-			//âåðõíèé òðåóãîëüíèê + äèàãîíàëü
+			//Ð²ÐµÑ€Ñ…Ð½Ð¸Ð¹ Ñ‚Ñ€ÐµÑƒÐ³Ð¾Ð»ÑŒÐ½Ð¸Ðº + Ð´Ð¸Ð°Ð³Ð¾Ð½Ð°Ð»ÑŒ
 			else
 				for (j = 0, l = k; j < n - k; j++, l++)
 					result[j] += matr[i][j] * a[l];
