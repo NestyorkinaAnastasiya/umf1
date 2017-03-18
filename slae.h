@@ -3,60 +3,61 @@
 #include "matrix.h"
 using namespace matrix;
 
-namespace slae{
-	class SLAE {
-		//Номер зашитого теста
-		int test;
-		//Размерность задачи
-		int n;
-		//Максимальное количество итераций
-		const int maxiter = 10000;
-		//Точность решения СЛАУ
-		const double eps = 1e-14;
-		//Коэфициенты задачи 
-		double lambda;
-		double gamma;
-		//Сетка, элементы которой узлы
+namespace slae
+{
+	class SLAE
+	{
+		//РЎРµС‚РєР°, СЌР»РµРјРµРЅС‚С‹ РєРѕС‚РѕСЂРѕР№ СѓР·Р»С‹
 		Grid grid;
-		//Глобальная матрица
+		//РќРѕРјРµСЂ Р·Р°С€РёС‚РѕРіРѕ С‚РµСЃС‚Р°
+		int test;
+		//Р Р°Р·РјРµСЂРЅРѕСЃС‚СЊ Р·Р°РґР°С‡Рё
+		int n;
+		//РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ РёС‚РµСЂР°С†РёР№
+		const int maxiter = 10000;
+		//РўРѕС‡РЅРѕСЃС‚СЊ СЂРµС€РµРЅРёСЏ РЎР›РђРЈ
+		const double eps = 1e-14;
+		//РљРѕСЌС„РёС†РёРµРЅС‚С‹ Р·Р°РґР°С‡Рё 
+		double lambda = 2;
+		double gamma;
+		//Р“Р»РѕР±Р°Р»СЊРЅР°СЏ РјР°С‚СЂРёС†Р°
 		Matrix A;
-		//Локальный вектор правой части
+		//Р›РѕРєР°Р»СЊРЅС‹Р№ РІРµРєС‚РѕСЂ РїСЂР°РІРѕР№ С‡Р°СЃС‚Рё
 		array <double, 9> locF;
-		//Глобальный вектор правой части
+		//Р“Р»РѕР±Р°Р»СЊРЅС‹Р№ РІРµРєС‚РѕСЂ РїСЂР°РІРѕР№ С‡Р°СЃС‚Рё
 		vector <double> F;
-		//Норма вектора правой части
+		//РќРѕСЂРјР° РІРµРєС‚РѕСЂР° РїСЂР°РІРѕР№ С‡Р°СЃС‚Рё
 		double normF;
 
 		void CalculateMatrix();
 
-		//Нахождение правой части
+		//РќР°С…РѕР¶РґРµРЅРёРµ РїСЂР°РІРѕР№ С‡Р°СЃС‚Рё
 		double CalculateF(double x, double y);
 		double CalculateGamma(double x, double y);
-		//Нахождение правой части при первом краевом условии
+		//РќР°С…РѕР¶РґРµРЅРёРµ РїСЂР°РІРѕР№ С‡Р°СЃС‚Рё РїСЂРё РїРµСЂРІРѕРј РєСЂР°РµРІРѕРј СѓСЃР»РѕРІРёРё
 		double CalculateF1(double x, double y);
-		//Нахождение правой части при втором краевом условии
+		//РќР°С…РѕР¶РґРµРЅРёРµ РїСЂР°РІРѕР№ С‡Р°СЃС‚Рё РїСЂРё РІС‚РѕСЂРѕРј РєСЂР°РµРІРѕРј СѓСЃР»РѕРІРёРё
 		double CalculateF2(double x, double y, int numberBorder);
 
-		//Приближенное значение искомого вектора
+		//РџСЂРёР±Р»РёР¶РµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РёСЃРєРѕРјРѕРіРѕ РІРµРєС‚РѕСЂР°
 		vector <double> x;
-		//Вектор невязки
+		//Р’РµРєС‚РѕСЂ РЅРµРІСЏР·РєРё
 		vector <double> r;
-		//Вектор спуска
+		//Р’РµРєС‚РѕСЂ СЃРїСѓСЃРєР°
 		vector <double> z;
 
-		//Вычисление нормы вектора
+		//Р’С‹С‡РёСЃР»РµРЅРёРµ РЅРѕСЂРјС‹ РІРµРєС‚РѕСЂР°
 		double Norm(const vector<double>& x);
-		//Скалярное произведение векторов
+		//РЎРєР°Р»СЏСЂРЅРѕРµ РїСЂРѕРёР·РІРµРґРµРЅРёРµ РІРµРєС‚РѕСЂРѕРІ
 		double Scalar(const vector<double>& x, const vector<double>& y);
 
 
 		double Residual();
-		void IterativeSteps(vector<double>& _new, vector<double> old);
-		double Sum(int i, vector<double> _new, vector<double> old);
+		double Sum(int i, const vector<double> &_new, const vector<double> &old);
 		
 	public:
-		//параметр релаксации
-		double w = 1;
+		//РїР°СЂР°РјРµС‚СЂ СЂРµР»Р°РєСЃР°С†РёРё
+		double w = 0.1;
 		SLAE();
 		void GaussSeidel();
 		~SLAE() {};
